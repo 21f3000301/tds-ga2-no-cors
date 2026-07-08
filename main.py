@@ -16,8 +16,10 @@ app.add_middleware(
 )
 
 @app.post("/analytics")
-async def analytics(request: Request, x_api_key: str | None = Header(default=None, alias="X-API-Key")):
-    if x_api_key != API_KEY:
+async def analytics(request: Request):
+    api_key = request.headers.get("x-api-key")  # read directly
+
+    if api_key != API_KEY:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
     body = await request.json()
